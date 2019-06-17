@@ -1,0 +1,31 @@
+{
+  "name": "mshop",
+  "version": "1.0.0",
+  "description": "react with node js backend to upload music files in aws",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client-install": "npm install --prefix client",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "engines": {
+    "node": "10.10.0"
+  },
+  "author": "Shambu Singh",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.475.0",
+    "body-parser": "^1.18.3",
+    "concurrently": "^4.0.1",
+    "express": "^4.16.3",
+    "mongoose": "^5.3.1",
+    "multer": "^1.4.1",
+    "multer-s3": "^2.9.0",
+    "nodemon": "^1.19.1",
+    "path": "^0.12.7",
+    "url": "^0.11.0",
+    "validator": "^10.8.0"
+  }
+}
