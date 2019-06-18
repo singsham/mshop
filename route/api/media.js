@@ -8,8 +8,8 @@ const url = require("url");
 const router = express.Router();
 
 const s3 = new aws.S3({
-  accessKeyId: "AKIAVU4SKXESAXVEKIPW",
-  secretAccessKey: "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",
+  accessKeyId: "",
+  secretAccessKey: "",
   Bucket: "mshop-musicapp-bucket",
   region: "ap-south-1"
 });
