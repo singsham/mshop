@@ -4,7 +4,7 @@ const displayMedia = (props) => {
   if(props.mediaFiles==null)
     return null
   const mediaLink = props.mediaFiles.map((files, index) => (
-    <li className="list-group-item card border-light mb-2 shadow p-3 mb-5 bg-white rounded" key={index}>
+    <li className="list-group-item card border-light mb-1 shadow p-3 mb-5 bg-white rounded" key={index}>
       <video controls height="240" width="320">
         <source src={files.fileUrl} />
       </video>
@@ -12,7 +12,7 @@ const displayMedia = (props) => {
     </li>
   ));
   return (
-      <ul className="list-group">{mediaLink}</ul>
+      <ul className="col-lg-7 ml-2 list-group">{mediaLink}</ul>
   );
 };
 

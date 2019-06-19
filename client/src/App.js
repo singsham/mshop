@@ -7,11 +7,12 @@ import InfoModal from "./components/InfoModal";
 
 class App extends Component {
   state = {
-    mediaFiles:null,
+    mediaFiles:[],
     selectedFile: null,
     processBar: false,
-    showModal:true,
+    showModal:false,
     modalContents:null,
+    inputKey:Date.now()
   };
 
   componentWillMount() {
@@ -23,9 +24,9 @@ class App extends Component {
     })
   }
 
-  singleFileChangedHandler = (event) => {
+  singleFileChangedHandler = (e) => {
     this.setState({
-      selectedFile:event.target.files[0]
+      selectedFile:e.target.files[0]
     });
   };
 
@@ -53,13 +54,13 @@ class App extends Component {
             }else {
             // Success
             const mediaData=response.data;
-            this.setState({mediaFiles:{...this.state.mediaFiles,...mediaData},selectedFile:null,showModal:true,modalContents:"File Uploaded"});
+            this.setState({mediaFiles:[mediaData,...this.state.mediaFiles],selectedFile:null,showModal:true,modalContents:"File Uploaded",inputKey:Date.now()});
             console.log("fileName", this.state.mediaFiles);
           }}
         })
         .catch((error) => {
           // If another error
-          this.setState({ processBar: false,showModal:true,modalContents:error});
+          this.setState({ processBar: false,showModal:true,modalContents:error,inputKey:Date.now()});
         });
     } else {
       // if file not selected throw error
@@ -67,6 +68,9 @@ class App extends Component {
     }
   };
 
+  hideModalHandler=()=>{
+    this.setState({showModal:false});
+  }
   render() {
     return (
       <div>
@@ -74,11 +78,12 @@ class App extends Component {
           <h1 className="display-4 text-center">mShop Music App</h1>
           <h3 className="display-5 text-right mr-5">just listen...anywhere</h3>
         </div>
-        <InfoModal content={this.state.modalContents} model={this.state.showModal}/>
+        <InfoModal content={this.state.modalContents} showModal={this.state.showModal} hideModal={this.hideModalHandler}/>
+
         <div className="container">
           <div className="row">
-            <div className="col-md-4"><Upload singleFileUploadHandler={this.singleFileUploadHandler} singleFileChangedHandler={this.singleFileChangedHandler} processBar={this.state.processBar} /></div>
-            <div className="col-md-8"><DisplayMedia mediaFiles={this.state.mediaFiles}/></div>
+            <Upload ClassName="col-lg-4" singleFileUploadHandler={this.singleFileUploadHandler} singleFileChangedHandler={this.singleFileChangedHandler} processBar={this.state.processBar} inputKey={this.state.inputKey}/>
+            <DisplayMedia mediaFiles={this.state.mediaFiles}/>
           </div>
           
         </div>

@@ -1,19 +1,12 @@
 import React from "react";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody} from "reactstrap";
 
 const infoModal = (props) => {
   return (
-    <div>
-      <Modal isOpen={props.modal} >
-          <ModalHeader >Modal title</ModalHeader>
-          <ModalBody>
-            {props.content}
-          </ModalBody>
-          <ModalFooter>
-            <Button color="secondary" onClick={props.closeModel}>Cancel</Button>
-          </ModalFooter>
-        </Modal>
-    </div>
+    <Modal isOpen={props.showModal} fase={true} centered>
+      <ModalHeader toggle={props.hideModal} charCode="X">Media Upload Info</ModalHeader>
+      <ModalBody>{props.content}</ModalBody>
+    </Modal>
   );
 };
 export default infoModal;
