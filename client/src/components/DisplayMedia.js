@@ -3,17 +3,16 @@ import React from "react";
 const displayMedia = (props) => {
   if(props.mediaFiles==null)
     return null
-  const mediaLink = props.mediaFiles.map((fileUrl, index) => (
-    <li className="list-group-item" key={index}>
-      <audio controls>
-        <source src={fileUrl} type="audio/mpeg" />
-      </audio>
+  const mediaLink = props.mediaFiles.map((files, index) => (
+    <li className="list-group-item card border-light mb-2 shadow p-3 mb-5 bg-white rounded" key={index}>
+      <video controls height="240" width="320">
+        <source src={files.fileUrl} />
+      </video>
+      <h6 className="ml-3">Title : {files.fileName}</h6>
     </li>
   ));
   return (
-    <div>
       <ul className="list-group">{mediaLink}</ul>
-    </div>
   );
 };
 

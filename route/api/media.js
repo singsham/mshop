@@ -8,8 +8,8 @@ const url = require("url");
 const router = express.Router();
 
 const s3 = new aws.S3({
-  accessKeyId: "AKIAVU4SKXESAXVEKIPW",
-  secretAccessKey: "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",
+  accessKeyId: "",
+  secretAccessKey: "",
   Bucket: "mshop-musicapp-bucket",
   region: "ap-south-1"
 });
@@ -23,7 +23,7 @@ const profileImgUpload = multer({
       cb(null, path.basename(file.originalname, path.extname(file.originalname)) + path.extname(file.originalname));
     }
   }),
-  limits: { fileSize: 20000000 }, // In bytes: 5000000 bytes = 5 MB
+  limits: { fileSize: 20000000 }, // In bytes: 20000000 bytes = 20 MB
   fileFilter: function(req, file, cb) {
     checkFileType(file, cb);
   }
@@ -47,7 +47,6 @@ function checkFileType(file, cb) {
 router.post("/media-upload", (req, res) => {
   profileImgUpload(req, res, (error) => {
     if (error) {
-      console.log("errors", error);
       res.json({ error: error });
     } else {
       // If File not found
@@ -56,33 +55,30 @@ router.post("/media-upload", (req, res) => {
         res.json("Error: No File Selected");
       } else {
         // If Success
-        const imageName = req.file.key;
-        const imageLocation = req.file.location;
-        res.json({
-          image: imageName,
-          location: imageLocation
-        });
+        const fileName = req.file.key;
+        const fileUrl = req.file.location;
+        res.json({fileName,fileUrl});
       }
     }
   });
 });
 
 router.get("/media-list", (req, res) => {
+  const url = "https://s3-ap-south-1.amazonaws.com/mshop-musicapp-bucket/";
+
   var params = {
     Bucket: "mshop-musicapp-bucket"
   };
 
-  const url='https://s3-ap-south-1.amazonaws.com/mshop-musicapp-bucket/';
   s3.listObjectsV2(params, (err, data) => {
     if (err) res.json("error");
-    else{
-      const mediaUrl=data.Contents.map((keys)=>url+keys.Key);
-
-      res.json({mediaUrl});
+    else {
+      const mediaUrl = data.Contents.map((keys) => {
+        return { fileName: keys.Key, fileUrl: url + keys.Key };
+      });
+      res.json({ mediaUrl });
     }
-    console.log('after finish');
   });
-
 });
 
 module.exports = router;

@@ -1,30 +1,24 @@
 import React, { Component } from "react";
 import axios from "axios";
-import $ from "jquery";
+
 import Upload from "./components/Upload";
 import DisplayMedia from "./components/DisplayMedia";
+import InfoModal from "./components/InfoModal";
 
 class App extends Component {
   state = {
     mediaFiles:null,
     selectedFile: null,
-    processBar: false
+    processBar: false,
+    showModal:true,
+    modalContents:null,
   };
 
   componentWillMount() {
     axios.get("/api/media/media-list").then((response)=>{
-      if(200===response.status){
-        console.log('response data',response.data.mediaUrl);
+      if(200 === response.status){
         this.setState({mediaFiles:response.data.mediaUrl})
-      }
-    })
-  }
-
-  componentWillUpdate() {
-    axios.get("/api/media/media-list").then((response)=>{
-      if(200===response.status){
-        console.log('response data',response.data.mediaUrl);
-        this.setState({mediaFiles:response.data.mediaUrl})
+        console.log(response.data.mediaUrl);
       }
     })
   }
@@ -36,13 +30,11 @@ class App extends Component {
   };
 
   singleFileUploadHandler = () => {
-    console.log("file details",this.state.selectedFile)
     const data = new FormData();
     this.setState({ processBar: true });
     // If file selected
     if (this.state.selectedFile) {
-      const fileName = this.state.selectedFile.name.replace(/\s/g, "-");
-      data.append("profileImage", this.state.selectedFile, fileName);
+      data.append("profileImage", this.state.selectedFile, this.state.selectedFile.name.replace(/\s/g, "-"));
 
       axios
         .post("/api/media/media-upload", data, {
@@ -57,39 +49,22 @@ class App extends Component {
           if (200 === response.status) {
             // If file size is larger than expected.
             if (response.data.error) {
-              this.ocShowAlert(response.data.error, "red");
+              this.setState({showModel:true,modalContents:response.data.error})
             }else {
             // Success
-            this.setState({selectedFile:null});
-            console.log("fileName", response.data);
-            this.ocShowAlert("File Uploaded", "#3089cf");
+            const mediaData=response.data;
+            this.setState({mediaFiles:{...this.state.mediaFiles,...mediaData},selectedFile:null,showModal:true,modalContents:"File Uploaded"});
+            console.log("fileName", this.state.mediaFiles);
           }}
         })
         .catch((error) => {
           // If another error
-          this.setState({ processBar: false });
-          this.ocShowAlert(error, "red");
+          this.setState({ processBar: false,showModal:true,modalContents:error});
         });
     } else {
       // if file not selected throw error
-      this.setState({ processBar: false });
-      this.ocShowAlert("Please upload file", "red");
+      this.setState({ processBar: false,showModal:true,modalContents:"Please upload file" });
     }
-  };
-
-  // ShowAlert Function
-  ocShowAlert = (message, background = "#3089cf") => {
-    let alertContainer = document.querySelector("#oc-alert-container"),
-      alertEl = document.createElement("div"),
-      textNode = document.createTextNode(message);
-    alertEl.setAttribute("class", "oc-alert-pop-up");
-    $(alertEl).css("background", background);
-    alertEl.appendChild(textNode);
-    alertContainer.appendChild(alertEl);
-    setTimeout(function() {
-      $(alertEl).fadeOut("slow");
-      $(alertEl).remove();
-    }, 6000);
   };
 
   render() {
@@ -99,12 +74,13 @@ class App extends Component {
           <h1 className="display-4 text-center">mShop Music App</h1>
           <h3 className="display-5 text-right mr-5">just listen...anywhere</h3>
         </div>
-
+        <InfoModal content={this.state.modalContents} model={this.state.showModal}/>
         <div className="container">
-          {/* For Alert box*/}
-          <div id="oc-alert-container" />
-          <Upload singleFileUploadHandler={this.singleFileUploadHandler} singleFileChangedHandler={this.singleFileChangedHandler} processBar={this.state.processBar} />
-          <DisplayMedia mediaFiles={this.state.mediaFiles}/>
+          <div className="row">
+            <div className="col-md-4"><Upload singleFileUploadHandler={this.singleFileUploadHandler} singleFileChangedHandler={this.singleFileChangedHandler} processBar={this.state.processBar} /></div>
+            <div className="col-md-8"><DisplayMedia mediaFiles={this.state.mediaFiles}/></div>
+          </div>
+          
         </div>
 
         <div className="jumbotron">

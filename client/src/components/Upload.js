@@ -2,7 +2,7 @@ import React from "react";
 
 const upload = (props) => {
   return (
-    <div className="card border-light mb-3 mt-5 shadow p-3 mb-5 bg-white rounded">
+    <div className="card border-light mb-3 mt-2 shadow p-3 mb-5 bg-white rounded">
       <div className="card-header">
         <h3 style={{ color: "#555", marginLeft: "12px" }}>Audio|Video Upload</h3>
         <p className="text-muted" style={{ marginLeft: "12px" }}>

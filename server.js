@@ -1,12 +1,12 @@
 const express = require( 'express' );
 const bodyParser = require( 'body-parser' );
 const path = require( 'path' );
-const profile = require( './route/api/media' );
+const media = require( './route/api/media' );
 
 const router = express.Router();
 const app = express();
 
-app.use( '/api/media', profile );
+app.use( '/api/media', media );
 
 app.use( bodyParser.urlencoded( { extended: false } ) );
 app.use( bodyParser.json() );
