@@ -1,4 +1,4 @@
-# A React Js and Node Js Boilerplate
+# A React Js and Node Js for access s3 Bucket
 ## Installation Instructions
 
 Install nodemon and create-react-app globally using below command:

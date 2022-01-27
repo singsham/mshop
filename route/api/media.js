@@ -8,7 +8,10 @@ const url = require("url");
 const router = express.Router();
 
 const s3 = new aws.S3({
-
+  accessKeyId: "",
+  secretAccessKey: "",
+  Bucket: "mshop-musicapp-bucket",
+  region: "ap-south-1"
 });
 
 const profileImgUpload = multer({
